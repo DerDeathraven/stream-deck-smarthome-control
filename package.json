@@ -1,0 +1,30 @@
+{
+  "name": "stream-deck-smarthome-controll",
+  "version": "1.0.0",
+  "description": "set your streamdeck to comunicate with your smarthome",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DerDeathraven/stream-deck-smarthome-controll.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DerDeathraven/stream-deck-smarthome-controll/issues"
+  },
+  "homepage": "https://github.com/DerDeathraven/stream-deck-smarthome-controll#readme",
+  "dependencies": {
+    "@elgato-stream-deck/node": "^5.7.2",
+    "@types/node": "^18.11.18",
+    "jimp": "^0.17.9",
+    "mqtt": "^4.3.7",
+    "nodemon": "^2.0.20",
+    "path": "^0.12.7",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  }
+}
