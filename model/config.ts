@@ -6,6 +6,14 @@ export type Config = {
   pictureFolder: string;
 };
 export type StreamdeckConfig = {
+  baseSettings: {
+    brightness: {
+      baseValue: number;
+      activeValue: number;
+      protocol?: "MQTT" | "HTTP";
+      path?: string;
+    };
+  };
   streamdeckModel: string;
   buttonSettings: ButtonSetting[];
 };

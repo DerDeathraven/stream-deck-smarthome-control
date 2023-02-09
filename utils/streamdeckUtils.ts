@@ -13,7 +13,7 @@ export async function setCleanStart(streamDeck: StreamDeck, config: Config) {
     const handler = button.protocol == "MQTT" ? mqttHandler : httpHandler;
     handler.attachListner(index);
   });
-
+  setBrightnessHandler(config);
   //TODO
 }
 
@@ -27,4 +27,20 @@ export function changeIcon(index: number) {
   } else {
     streamDeck.fillKeyColor(index, 255, 0, 0);
   }
+}
+
+export function setBrightness(level?: number) {
+  level =
+    level ||
+    streamDeckConfig.streamdeckConfig.baseSettings.brightness.activeValue;
+  streamDeck.setBrightness(level);
+}
+
+function setBrightnessHandler(config: Config) {
+  const { protocol, path, baseValue } =
+    config.streamdeckConfig.baseSettings.brightness;
+  if (!path) return;
+  const handler = protocol == "MQTT" ? mqttHandler : httpHandler;
+  handler.setBrightnessListner(path);
+  setBrightness(baseValue);
 }

@@ -23,6 +23,14 @@ function createConfig(streamDeck: StreamDeck) {
     httpPort: 4000,
     pictureFolder: "./images",
     streamdeckConfig: {
+      baseSettings: {
+        brightness: {
+          baseValue: 50,
+          activeValue: 50,
+          protocol: "MQTT",
+          path: "streamdeck/brightness",
+        },
+      },
       streamdeckModel: streamDeck.MODEL,
       buttonSettings: [],
     },

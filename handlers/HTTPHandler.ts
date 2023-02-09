@@ -20,7 +20,11 @@ export class HTTPHandler {
     });
   }
   send(adress: string, payload: string) {
-    post(adress, { payload });
+    try {
+      post(adress, { payload });
+    } catch (e) {
+      console.log(e);
+    }
   }
   setHandlers() {
     for (const route in this.routeMap) {
@@ -45,4 +49,5 @@ export class HTTPHandler {
     this.routeMap[path] = index;
     this.setHandlers();
   }
+  setBrightnessListner() {}
 }
