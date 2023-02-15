@@ -1,8 +1,9 @@
 import { StreamDeck } from "@elgato-stream-deck/node";
-import { existsSync, readFileSync } from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { MQTT_SERVER } from "../const";
-import { Config } from "../model/config";
+import { Config, StreamdeckConfig } from "../model/config";
+import { streamDeckConfig } from "../index";
 
 export function readConfig(streamDeck: StreamDeck) {
   if (existsSync(resolve("./config.json"))) {
@@ -35,4 +36,16 @@ function createConfig(streamDeck: StreamDeck) {
       buttonSettings: [],
     },
   } as Config;
+}
+
+export function setNewDeckConfig(config: StreamdeckConfig) {
+  streamDeckConfig.streamdeckConfig = config;
+  saveConfig();
+}
+
+export function saveConfig() {
+  writeFileSync(
+    resolve("./config.json"),
+    JSON.stringify(streamDeckConfig, null, 2)
+  );
 }

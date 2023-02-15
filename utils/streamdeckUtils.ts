@@ -44,3 +44,13 @@ function setBrightnessHandler(config: Config) {
   handler.setBrightnessListner(path);
   setBrightness(baseValue);
 }
+
+export function collectStreamdeckData() {
+  const { KEY_COLUMNS, KEY_ROWS, NUM_ENCODERS } = streamDeck;
+  const retObj = {
+    KEY_COLUMNS,
+    KEY_ROWS,
+    NUM_ENCODERS,
+  };
+  return retObj;
+}

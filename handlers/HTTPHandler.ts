@@ -2,7 +2,12 @@ import express from "express";
 import { streamDeckConfig } from "../index";
 import { json, urlencoded } from "body-parser";
 import { post } from "axios";
-import { changeIcon } from "../utils/streamdeckUtils";
+import { changeIcon, collectStreamdeckData } from "../utils/streamdeckUtils";
+import {
+  getStreamDeckDeviceInfo,
+  getStreamDeckInfo,
+} from "@elgato-stream-deck/node";
+import { setNewDeckConfig } from "../utils/configUtils";
 
 export class HTTPHandler {
   client: any;
@@ -40,6 +45,24 @@ export class HTTPHandler {
         res.send("OK");
       });
     }
+    this.client.get("/api/state", (req: Request, res: any) => {
+      res.status(200);
+      res.send(JSON.stringify(streamDeckConfig.streamdeckConfig));
+    });
+    this.client.get("/api/streamdeck-info", (req: Request, res: any) => {
+      res.status(200);
+      const streamdeckInfo = collectStreamdeckData();
+      res.send(JSON.stringify(streamdeckInfo));
+    });
+    this.client.post("/api/state", (req: Request, res: any) => {
+      if (!req.body) return;
+      const body = req.body;
+      //@ts-ignore
+      setNewDeckConfig(body);
+      console.log("worked");
+      res.status(200);
+      res.send(JSON.stringify(streamDeckConfig.streamdeckConfig));
+    });
   }
 
   attachListner(index: number) {

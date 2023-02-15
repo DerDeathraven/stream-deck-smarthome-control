@@ -4,18 +4,20 @@ import { readConfig } from "./utils/configUtils";
 import { setCleanStart } from "./utils/streamdeckUtils";
 import { executeTypeSpecificFunction } from "./utils/buttonUtils";
 import { HTTPHandler } from "./handlers/HTTPHandler";
-
+import { LoggingHandler } from "./handlers/LoggingHandler";
+export const logHandler = new LoggingHandler();
 export const streamDeck = openStreamDeck();
 export const streamDeckConfig = readConfig(streamDeck);
 export const mqttHandler = new MqttHandler();
 export const httpHandler = new HTTPHandler();
-
 streamDeck.on("error", (error) => console.error(error));
-
 setCleanStart(streamDeck, streamDeckConfig);
 
 streamDeck.on("down", (keyindex) => {
-  if (!streamDeckConfig.streamdeckConfig.buttonSettings[keyindex]) {
+  if (
+    !streamDeckConfig.streamdeckConfig.buttonSettings[keyindex]
+      ?.typeSpecifigConfig.path
+  ) {
     console.log("[DECK] pressed empty key", keyindex);
     return;
   }
