@@ -15,12 +15,15 @@ function button(buttonSetting: ButtonSetting) {
   const { protocol, typeSpecifigConfig } = buttonSetting;
   const handler = protocol == "MQTT" ? mqttHandler : httpHandler;
   console.log(buttonSetting);
-  handler.send(typeSpecifigConfig.path, "true");
+  handler.send(typeSpecifigConfig.path, typeSpecifigConfig.message || "true");
 }
 
 function buttonSwitch(buttonSetting: ButtonSetting) {
   const { protocol, typeSpecifigConfig } = buttonSetting;
   const handler = protocol == "MQTT" ? mqttHandler : httpHandler;
   typeSpecifigConfig.state = !typeSpecifigConfig.state;
-  handler.send(typeSpecifigConfig.path, typeSpecifigConfig.state);
+  handler.send(
+    typeSpecifigConfig.path,
+    typeSpecifigConfig.message || typeSpecifigConfig.state
+  );
 }
