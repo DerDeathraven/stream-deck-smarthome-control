@@ -64,7 +64,7 @@ export class HTTPHandler {
         const button = streamDeckFacade.getButton(index);
         //@ts-ignore
         button.typeSpecifigConfig.state = !!body.payload;
-        // this.socketHandler.sendToClient("buttonStateChange", String(index));
+        this.socketHandler.sendToClient("buttonStateChange", String(index));
         streamDeckFacade.changeIcon(index);
         res.status(200);
         res.send("OK");

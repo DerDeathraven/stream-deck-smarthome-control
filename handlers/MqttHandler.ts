@@ -44,8 +44,9 @@ export class MqttHandler {
 
   setHandler() {
     const streamDeckFacade = StreamDeckFacade.getInstance();
-    const socketHandler = SocketHandler.getHandler();
+
     this.client.on("message", (topic: string, message: string) => {
+      const socketHandler = SocketHandler.getHandler();
       message = message.toString();
       if (topic in this.buttonTopicMap) {
         const indexArr = this.buttonTopicMap[topic];
@@ -54,7 +55,7 @@ export class MqttHandler {
           if (!button) return;
           button.typeSpecifigConfig.state = message == "true";
           streamDeckFacade.changeIcon(index);
-          // socketHandler.sendToClient("buttonStateChange", String(index));
+          socketHandler.sendToClient("buttonStateChange", String(index));
         });
       } else if (topic in this.topicMap) {
         const entry = this.topicMap[topic];
