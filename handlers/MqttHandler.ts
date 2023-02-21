@@ -1,7 +1,7 @@
 import { MqttClient, connect } from "mqtt";
 import { MQTT_SERVER } from "../const";
-import { streamDeck, streamDeckConfig } from "../index";
-import { changeIcon, setBrightness } from "../utils/streamdeckUtils";
+import { StreamDeckFacade } from "./StreamDeckFacade";
+import { SocketHandler } from "./SocketHandler";
 
 export class MqttHandler {
   public client: MqttClient;
@@ -9,6 +9,7 @@ export class MqttHandler {
   public buttonTopicMap: Record<string, number[]> = {};
 
   public logs: string[] = [];
+  static instance: MqttHandler;
   constructor() {
     this.client = connect(MQTT_SERVER);
     this.topicMap = {};
@@ -20,6 +21,12 @@ export class MqttHandler {
     });
     this.setHandler();
   }
+  static intitalize(): void {
+    MqttHandler.instance = new MqttHandler();
+  }
+  static getHandler(): MqttHandler {
+    return MqttHandler.instance;
+  }
 
   send(topic: string, message: string) {
     this.logs.push(`[${new Date().toISOString()}] ${topic}: ${message}`);
@@ -27,23 +34,27 @@ export class MqttHandler {
   }
 
   attachListner(index: number) {
-    const topic =
-      streamDeckConfig.streamdeckConfig.buttonSettings[index].typeSpecifigConfig
-        .incomingPath;
+    const streamDeckFacade = StreamDeckFacade.getInstance();
+    const button = streamDeckFacade.getButton(index);
+    if (!button) return;
+    const topic = button.typeSpecifigConfig.incomingPath;
     const entry = this.buttonTopicMap[topic];
     this.buttonTopicMap[topic] = entry ? [...entry, index] : [index];
   }
 
   setHandler() {
+    const streamDeckFacade = StreamDeckFacade.getInstance();
+    const socketHandler = SocketHandler.getHandler();
     this.client.on("message", (topic: string, message: string) => {
       message = message.toString();
       if (topic in this.buttonTopicMap) {
         const indexArr = this.buttonTopicMap[topic];
         indexArr.forEach((index) => {
-          const button =
-            streamDeckConfig.streamdeckConfig.buttonSettings[index];
+          const button = streamDeckFacade.getButton(index);
+          if (!button) return;
           button.typeSpecifigConfig.state = message == "true";
-          changeIcon(index);
+          streamDeckFacade.changeIcon(index);
+          // socketHandler.sendToClient("buttonStateChange", String(index));
         });
       } else if (topic in this.topicMap) {
         const entry = this.topicMap[topic];
@@ -51,9 +62,7 @@ export class MqttHandler {
           case "brightness":
             let level = parseInt(message);
             level = level == 0 ? 1 : level;
-            streamDeckConfig.streamdeckConfig.baseSettings.brightness.activeValue =
-              level;
-            setBrightness();
+            streamDeckFacade.setBrightness(level);
             break;
         }
       }

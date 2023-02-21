@@ -3,7 +3,7 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { MQTT_SERVER } from "../const";
 import { Config, StreamdeckConfig } from "../model/config";
-import { streamDeckConfig } from "../index";
+import { StreamDeckFacade } from "../handlers/StreamDeckFacade";
 
 export function readConfig(streamDeck: StreamDeck) {
   if (existsSync(resolve("./config.json"))) {
@@ -39,13 +39,13 @@ function createConfig(streamDeck: StreamDeck) {
 }
 
 export function setNewDeckConfig(config: StreamdeckConfig) {
-  streamDeckConfig.streamdeckConfig = config;
+  StreamDeckFacade.getInstance().config.streamdeckConfig = config;
   saveConfig();
 }
 
 export function saveConfig() {
   writeFileSync(
     resolve("./config.json"),
-    JSON.stringify(streamDeckConfig, null, 2)
+    JSON.stringify(StreamDeckFacade.getInstance().config, null, 2)
   );
 }

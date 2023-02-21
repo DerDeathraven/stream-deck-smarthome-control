@@ -1,20 +1,28 @@
+declare let console: Console & {
+  newLog: (...args: any[]) => void;
+};
+
 export class LoggingHandler {
   private logs: string[];
+  static instance: LoggingHandler;
   constructor() {
     this.logs = [];
-    //@ts-ignore
     console.newLog = console.log;
     console.log = (message) => {
       this.logs.push(message);
-      //@ts-ignore
       console.newLog(message);
     };
+  }
+  static inizalize(): void {
+    LoggingHandler.instance = new LoggingHandler();
+  }
+  static getHandler(): LoggingHandler {
+    return LoggingHandler.instance;
   }
   clear() {
     this.logs = [];
   }
   dump() {
-    //@ts-ignore
     console.newLog(this.logs);
   }
 }

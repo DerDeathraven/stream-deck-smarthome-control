@@ -1,6 +1,6 @@
-import { httpHandler, mqttHandler } from "../index";
+import { HTTPHandler } from "../handlers/HTTPHandler";
+import { MqttHandler } from "../handlers/MqttHandler";
 import { ButtonSetting } from "../model/config";
-import { changeIcon } from "./streamdeckUtils";
 
 export const functionMap: Record<string, Function> = {
   button,
@@ -12,6 +12,8 @@ export function executeTypeSpecificFunction(buttonSetting: ButtonSetting) {
 }
 
 function button(buttonSetting: ButtonSetting) {
+  const mqttHandler = MqttHandler.getHandler();
+  const httpHandler = HTTPHandler.getHandler();
   const { protocol, typeSpecifigConfig } = buttonSetting;
   const handler = protocol == "MQTT" ? mqttHandler : httpHandler;
   console.log(buttonSetting);
@@ -19,6 +21,8 @@ function button(buttonSetting: ButtonSetting) {
 }
 
 function buttonSwitch(buttonSetting: ButtonSetting) {
+  const mqttHandler = MqttHandler.getHandler();
+  const httpHandler = HTTPHandler.getHandler();
   const { protocol, typeSpecifigConfig } = buttonSetting;
   const handler = protocol == "MQTT" ? mqttHandler : httpHandler;
   typeSpecifigConfig.state = !typeSpecifigConfig.state;

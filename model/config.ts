@@ -1,3 +1,9 @@
+export type IconConfig = {
+  state: string;
+  icon: string;
+  color?: string;
+};
+
 export type Config = {
   streamdeckConfig: StreamdeckConfig;
   mqttAdress: string;
@@ -20,6 +26,6 @@ export type StreamdeckConfig = {
 export type ButtonSetting = {
   type: string;
   protocol: "MQTT" | "HTTP";
-  icons: string[];
+  icons: IconConfig[];
   typeSpecifigConfig: any;
 };

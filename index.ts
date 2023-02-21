@@ -1,28 +1,10 @@
-import { openStreamDeck } from "@elgato-stream-deck/node";
 import { MqttHandler } from "./handlers/MqttHandler";
-import { readConfig } from "./utils/configUtils";
-import { setCleanStart } from "./utils/streamdeckUtils";
-import { executeTypeSpecificFunction } from "./utils/buttonUtils";
 import { HTTPHandler } from "./handlers/HTTPHandler";
 import { LoggingHandler } from "./handlers/LoggingHandler";
-export const logHandler = new LoggingHandler();
-export const streamDeck = openStreamDeck();
-export const streamDeckConfig = readConfig(streamDeck);
-export const mqttHandler = new MqttHandler();
-export const httpHandler = new HTTPHandler();
-streamDeck.on("error", (error) => console.error(error));
-setCleanStart(streamDeck, streamDeckConfig);
-
-streamDeck.on("down", (keyindex) => {
-  if (
-    !streamDeckConfig.streamdeckConfig.buttonSettings[keyindex]
-      ?.typeSpecifigConfig.path
-  ) {
-    console.log("[DECK] pressed empty key", keyindex);
-    return;
-  }
-
-  const buttonSetting =
-    streamDeckConfig.streamdeckConfig.buttonSettings[keyindex];
-  executeTypeSpecificFunction(buttonSetting);
-});
+import { SocketHandler } from "./handlers/SocketHandler";
+import { StreamDeckFacade } from "./handlers/StreamDeckFacade";
+StreamDeckFacade.initalize();
+LoggingHandler.inizalize();
+MqttHandler.intitalize();
+HTTPHandler.initalize();
+StreamDeckFacade.getInstance().setCleanStart();
