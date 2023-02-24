@@ -56,3 +56,9 @@ Using the node library for the Stream Deck this application works _instead_ of t
 
 - MQTT
 - HTTP
+
+## Used Technologies
+
+- Socket.io
+- MQTT
+- StreamDeck JS API
