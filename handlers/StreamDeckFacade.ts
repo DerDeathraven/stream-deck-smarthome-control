@@ -5,6 +5,7 @@ import { MqttHandler } from "./MqttHandler";
 import { readConfig } from "../utils/configUtils";
 import { executeTypeSpecificFunction } from "../utils/buttonUtils";
 import { getMessageHandler } from "../utils/messagingHandlerUtils";
+import { hexToRgb } from "../utils/colorUtils";
 
 /**
  * Streamdeck instance handler
@@ -63,14 +64,19 @@ export class StreamDeckFacade {
   }
 
   changeIcon(index: number) {
-    const state =
-      this.config.streamdeckConfig.buttonSettings[index].typeSpecifigConfig
-        .state;
+    const button = this.config.streamdeckConfig.buttonSettings[index];
+    const state = button.typeSpecifigConfig.state;
     if (state === undefined) return;
-    if (state) {
-      this.streamDeck.fillKeyColor(index, 0, 255, 0);
+    const icon = button.icons.find((icon) => icon.state == `${state}`);
+    if (icon && icon.color) {
+      const { r, g, b } = hexToRgb(icon.color)!;
+      this.streamDeck.fillKeyColor(index, r, g, b);
     } else {
-      this.streamDeck.fillKeyColor(index, 255, 0, 0);
+      if (state) {
+        this.streamDeck.fillKeyColor(index, 0, 255, 0);
+      } else {
+        this.streamDeck.fillKeyColor(index, 255, 0, 0);
+      }
     }
   }
 

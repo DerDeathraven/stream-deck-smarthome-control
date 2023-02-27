@@ -1,6 +1,7 @@
 import { HTTPHandler } from "../handlers/HTTPHandler";
 import { MqttHandler } from "../handlers/MqttHandler";
 import { ButtonSetting } from "../model/config";
+import { getMessageHandler } from "./messagingHandlerUtils";
 
 export const functionMap: Record<string, Function> = {
   button,
@@ -21,13 +22,19 @@ function button(buttonSetting: ButtonSetting) {
 }
 
 function buttonSwitch(buttonSetting: ButtonSetting) {
-  const mqttHandler = MqttHandler.getHandler();
-  const httpHandler = HTTPHandler.getHandler();
   const { protocol, typeSpecifigConfig } = buttonSetting;
-  const handler = protocol == "MQTT" ? mqttHandler : httpHandler;
-  typeSpecifigConfig.state = !typeSpecifigConfig.state;
+  const handler = getMessageHandler(protocol);
+  typeSpecifigConfig.state = getSendMessage(buttonSetting);
   handler.send(
     typeSpecifigConfig.path,
     typeSpecifigConfig.message || typeSpecifigConfig.state
   );
+}
+
+function getSendMessage(buttonSetting: ButtonSetting) {
+  if (buttonSetting.typeSpecifigConfig.message)
+    return buttonSetting.typeSpecifigConfig.message;
+  return buttonSetting.icons.find(
+    (icon) => icon.state != buttonSetting.typeSpecifigConfig.state
+  )?.state;
 }

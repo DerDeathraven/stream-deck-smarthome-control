@@ -1,12 +1,11 @@
-import express from "express";
+import express, { Request } from "express";
 import { json, urlencoded } from "body-parser";
 import { AxiosError, post } from "axios";
 import { setNewDeckConfig } from "../utils/configUtils";
 import { Server } from "http";
 import { SocketHandler } from "./SocketHandler";
 import { StreamDeckFacade } from "./StreamDeckFacade";
-
-// const socketHandler = SocketHandler.getHandler();
+import fileUpload from "express-fileupload";
 /**
  * Singelton class
  */
@@ -25,6 +24,7 @@ export class HTTPHandler {
     this.socketHandler = new SocketHandler(this.httpServer);
     this.client.use(json());
     this.client.use(urlencoded({ extended: false }));
+    this.client.use(fileUpload());
 
     this.setHandlers();
     const port = streamDeckFacade.config.httpPort;
@@ -63,8 +63,15 @@ export class HTTPHandler {
         const index = this.routeMap[route];
         const button = streamDeckFacade.getButton(index);
         //@ts-ignore
-        button.typeSpecifigConfig.state = !!body.payload;
-        this.socketHandler.sendToClient("buttonStateChange", String(index));
+        button.typeSpecifigConfig.state = body.payload;
+        const sendMessage = {
+          index: String(index),
+          message: body.payload,
+        };
+        this.socketHandler.sendToClient(
+          "buttonStateChange",
+          JSON.stringify(sendMessage)
+        );
         streamDeckFacade.changeIcon(index);
         res.status(200);
         res.send("OK");
@@ -86,6 +93,11 @@ export class HTTPHandler {
       setNewDeckConfig(body);
       res.status(200);
       res.send(JSON.stringify(streamDeckFacade.config.streamdeckConfig));
+    });
+    this.client.post("/api/uploadIcon", (req: Request, res: any) => {
+      console.log(req.files);
+      res.status(200);
+      res.send("OK");
     });
   }
 
