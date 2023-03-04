@@ -25,16 +25,11 @@ function buttonSwitch(buttonSetting: ButtonSetting) {
   const { protocol, typeSpecifigConfig } = buttonSetting;
   const handler = getMessageHandler(protocol);
   typeSpecifigConfig.state = getSendMessage(buttonSetting);
-  handler.send(
-    typeSpecifigConfig.path,
-    typeSpecifigConfig.message || typeSpecifigConfig.state
-  );
+  handler.send(typeSpecifigConfig.path, typeSpecifigConfig.message || "true");
 }
 
 function getSendMessage(buttonSetting: ButtonSetting) {
   if (buttonSetting.typeSpecifigConfig.message)
     return buttonSetting.typeSpecifigConfig.message;
-  return buttonSetting.icons.find(
-    (icon) => icon.state != buttonSetting.typeSpecifigConfig.state
-  )?.state;
+  return "true";
 }

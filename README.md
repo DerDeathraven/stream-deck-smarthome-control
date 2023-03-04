@@ -9,44 +9,8 @@
 - install
 - close your existing driver
 - run once so that the standard config is intiated
-- open your config
-
-```json
-
- "buttonSettings": [
-     {
-       "type": "buttonSwitch",
-       "protocol": "HTTP",
-       "icons": [],
-       "typeSpecifigConfig": {
-         "path": "http://localhost:4000/api/buttons/streamdeck/buttons/1",
-         "incomingPath": "/streamdeck/buttons/1"
-       }
-     },
-      {
-       "type": "button",
-       "icons": [],
-       "protocol": "MQTT",
-       "typeSpecifigConfig": {
-         "path": "streamdeck/test"
-       }
-     },
-     {
-       "type": "buttonSwitch",
-       "icons": [],
-       "protocol": "MQTT",
-       "typeSpecifigConfig": {
-         "path": "streamdeck/test",
-         "incomingPath": "streamdeck/buttons/1"
-       }
-     },
-     ]
-
-```
-
-- use these settings to play around
 - change your MQTT broker in the const.ts file
-- when bored: install my front-end and play around with that
+- open localhost:4000 to get to the dashboard
 
 ## General
 
