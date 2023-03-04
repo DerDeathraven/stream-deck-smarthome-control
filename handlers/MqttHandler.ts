@@ -39,6 +39,8 @@ export class MqttHandler {
     if (!button) return;
     const topic = button.typeSpecifigConfig.incomingPath;
     const entry = this.buttonTopicMap[topic];
+    const bootupMsg = button.typeSpecifigConfig.onBootup;
+    if (bootupMsg) this.send(bootupMsg, "true");
     this.buttonTopicMap[topic] = entry ? [...entry, index] : [index];
   }
 

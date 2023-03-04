@@ -19,12 +19,14 @@ export class HTTPHandler {
     const streamDeckFacade = StreamDeckFacade.getInstance();
 
     this.client = express();
+
     this.httpServer = new Server(this.client);
     this.routeMap = {};
     this.socketHandler = new SocketHandler(this.httpServer);
     this.client.use(json());
     this.client.use(urlencoded({ extended: false }));
     this.client.use(fileUpload());
+    this.client.use(express.static("public"));
 
     this.setHandlers();
     const port = streamDeckFacade.config.httpPort;
@@ -108,6 +110,7 @@ export class HTTPHandler {
     if (!button) return;
     const path = button.typeSpecifigConfig.incomingPath;
     this.routeMap[path] = index;
+    this.send(button.typeSpecifigConfig.onBootup, "true");
     this.setHandlers();
   }
   setBrightnessListner() {}

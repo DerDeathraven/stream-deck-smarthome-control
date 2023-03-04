@@ -56,7 +56,6 @@ export class StreamDeckFacade {
     this.config.streamdeckConfig.buttonSettings.forEach((button, index) => {
       if (button.type === "button") return;
       const handler = getMessageHandler(button.protocol);
-      console.log(handler);
       handler.attachListner(index);
     });
     this.setBrightnessHandler();
@@ -72,11 +71,7 @@ export class StreamDeckFacade {
       const { r, g, b } = hexToRgb(icon.color)!;
       this.streamDeck.fillKeyColor(index, r, g, b);
     } else {
-      if (state) {
-        this.streamDeck.fillKeyColor(index, 0, 255, 0);
-      } else {
-        this.streamDeck.fillKeyColor(index, 255, 0, 0);
-      }
+      this.streamDeck.fillKeyColor(index, 255, 0, 0);
     }
   }
 
