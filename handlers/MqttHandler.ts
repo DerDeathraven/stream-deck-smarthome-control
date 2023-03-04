@@ -49,6 +49,7 @@ export class MqttHandler {
 
     this.client.on("message", (topic: string, message: string) => {
       const socketHandler = SocketHandler.getHandler();
+      console.log(`[MQTT] ${topic}: ${message}`);
       message = message.toString();
       if (topic in this.buttonTopicMap) {
         const indexArr = this.buttonTopicMap[topic];

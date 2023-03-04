@@ -4,7 +4,7 @@ import { ButtonSetting } from "../model/config";
 import { getMessageHandler } from "./messagingHandlerUtils";
 
 export const functionMap: Record<string, Function> = {
-  button,
+  button: buttonSwitch,
   buttonSwitch,
 } as const;
 
