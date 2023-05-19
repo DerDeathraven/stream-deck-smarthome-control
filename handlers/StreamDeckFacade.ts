@@ -6,6 +6,9 @@ import { readConfig } from "../utils/configUtils";
 import { executeTypeSpecificFunction } from "../utils/buttonUtils";
 import { getMessageHandler } from "../utils/messagingHandlerUtils";
 import { hexToRgb } from "../utils/colorUtils";
+import { readFileSync } from "fs";
+import { resolve } from "path";
+import { readPrefabImage } from "../utils/imageUtils";
 
 /**
  * Streamdeck instance handler
@@ -53,10 +56,16 @@ export class StreamDeckFacade {
       await this.streamDeck.clearPanel();
       return;
     }
+    const image = await console.log(this.streamDeck.ICON_PIXELS);
     this.config.streamdeckConfig.buttonSettings.forEach((button, index) => {
       if (button.type === "button") return;
       const handler = getMessageHandler(button.protocol);
       handler.attachListner(index);
+      if (button.icons && button.icons[0]?.icon) {
+        readPrefabImage(button.icons[0].icon).then((icon) => {
+          this.streamDeck.fillKeyBuffer(index, icon, { format: "rgba" });
+        });
+      }
     });
     this.setBrightnessHandler();
     //TODO

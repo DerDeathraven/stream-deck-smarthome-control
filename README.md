@@ -26,3 +26,7 @@ Using the node library for the Stream Deck this application works _instead_ of t
 - Socket.io
 - MQTT
 - StreamDeck JS API
+
+## Thanks
+
+icons by [hqrloveq](https://www.flaticon.com/authors/hqrloveq)
